@@ -14,7 +14,73 @@
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
+    let datalist = [];
+    option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
 
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                normal: {
+                    borderWidth: 4,
+                    borderColor: '#06076b',
+                    color: function(params) {
+                        var colorList = colorList_data
+                        return new echarts.graphic.LinearGradient(1, 0, 0, 0, [{ //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+
+                            offset: 0,
+                            color: colorList[params.dataIndex].c1
+                        }, {
+                            offset: 1,
+                            color: colorList[params.dataIndex].c2
+                        }])
+                        /*  return colorList[params.dataIndex]*/
+                    }
+
+                },
+                emphasis: {
+                    borderWidth: 0,
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        };
+    $.ajax({
+        url: "/querypie",
+        dataType: "json",
+        success:function (data) {
+            for (let i in data){
+                datalist[i] = data[i];
+                console.log(datalist[i])
+            }
+            myChart.setOption({
+                series: [{
+                    name: '医疗物质',
+                    type: 'pie',
+                    radius: '68%',
+                    center: ['50%', '50%'],
+                    clockwise: false,
+                    getIndex: 0,
+                    data: datalist,
+                    label: {
+                        normal: {
+                            textStyle: {
+                                color: '#07c9fe',
+                                fontSize: 14,
+                            }
+                        }
+                    }
+                }]
+                })
+        }
+    })
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
 
