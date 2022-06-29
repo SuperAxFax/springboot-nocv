@@ -1,8 +1,10 @@
 package com.fax.controller;
 
 import com.fax.entity.NocvData;
+import com.fax.entity.NocvLine;
 import com.fax.entity.NocvPie;
 import com.fax.service.IndexService;
+import com.fax.service.LineService;
 import com.fax.service.PieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,9 @@ public class IndexController {
     @Autowired
     private PieService pieService;
 
+    @Autowired
+    private LineService lineService;
+
     @RequestMapping("/query")
     @ResponseBody//作用是将List序列化成为一个json实体
     public List<NocvData> queryDta(){
@@ -40,7 +45,36 @@ public class IndexController {
         return list;
     }
 
-    //查询数据库中的数据并提供给前端
+    //查询数据库中的折线图数据并提供给前端
+    @RequestMapping("/queryline")
+    @ResponseBody
+    public Map<String,List<Object>> queryLine(){
+        //调用service层的方法，然后在service层的LineService接口创建->LineServiceImpl来实现
+        //实现类中需要调dao层中的查询方法，然后再继续创建新的函数即可。
+        List<NocvLine> querydata = lineService.querydata();
+        List<Integer> confirm = new ArrayList<>();
+        List<Integer> seperate = new ArrayList<>();
+        List<Integer> cure = new ArrayList<>();
+        List<Integer> dead = new ArrayList<>();
+        List<Integer> similar = new ArrayList<>();
+        for (NocvLine line : querydata) {
+            confirm.add(line.getConfirm());
+            seperate.add(line.getSeperate());
+            cure.add(line.getCure());
+            dead.add(line.getDead());
+            similar.add(line.getSimilar());
+        }
+
+        Map map = new HashMap();
+        map.put("confirm",confirm);
+        map.put("seperate",seperate);
+        map.put("cure",cure);
+        map.put("dead",dead);
+        map.put("similar",similar);
+
+        return map;
+    }
+
     @RequestMapping("/querybar")
     @ResponseBody
     public Map<String,List<Object>> queryBar(){
@@ -75,5 +109,11 @@ public class IndexController {
     @RequestMapping("/tobar")
     public String toBar(){
         return "bar";
+    }
+
+    //跳转到line页面
+    @RequestMapping("/toline")
+    public String toLine(){
+        return "line";
     }
 }
