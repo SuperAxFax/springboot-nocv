@@ -1,8 +1,10 @@
 package com.fax.controller;
 
 import com.fax.entity.NocvData;
+import com.fax.entity.NocvGlobal;
 import com.fax.entity.NocvLine;
 import com.fax.entity.NocvPie;
+import com.fax.service.GlobalService;
 import com.fax.service.IndexService;
 import com.fax.service.LineService;
 import com.fax.service.PieService;
@@ -28,6 +30,9 @@ public class IndexController {
 
     @Autowired
     private LineService lineService;
+
+    @Autowired
+    private GlobalService globalService;
 
     @RequestMapping("/query")
     @ResponseBody//作用是将List序列化成为一个json实体
@@ -75,6 +80,7 @@ public class IndexController {
         return map;
     }
 
+    //查询柱状图
     @RequestMapping("/querybar")
     @ResponseBody
     public Map<String,List<Object>> queryBar(){
@@ -99,6 +105,16 @@ public class IndexController {
         System.out.println(value);
         return map;
     }
+
+    //查询全球疫情图
+    @RequestMapping("/queryglobal")
+    @ResponseBody
+    public List<NocvGlobal> queryGlobal(){
+        List<NocvGlobal> list = globalService.list();
+        return list;
+    }
+
+
     //跳转到pie界面
     @RequestMapping("/topie")
     public String toPie(){
@@ -115,5 +131,11 @@ public class IndexController {
     @RequestMapping("/toline")
     public String toLine(){
         return "line";
+    }
+
+    //跳转到global页面
+    @RequestMapping("/toglobal")
+    public String toGlobal(){
+        return "global";
     }
 }

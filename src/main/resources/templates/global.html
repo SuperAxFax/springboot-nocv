@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
 
 
-    <title>主页</title>
+    <title>世界地图</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,6 +14,7 @@
     <!-- 引入刚刚下载的 ECharts 文件 -->
     <script th:src="@{/echarts.min.js}"></script>
     <script th:src="@{/china.js}"></script>
+    <script th:src="@{/world.js}"></script>
     <script th:src="@{/jquery-1.11.1.min.js}"></script>
     <script th:src="@{/layui/layui.js}"></script>
 
@@ -62,30 +63,19 @@
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
     let datalist = [];
-
     option = {
         title: {
-            text: '中国疫情图',
-            left: 'center'
+            text: '新型冠状病毒肺炎疫情地图',
+            subtext: '累计确诊人数（截止至北京时间2020-06-09 08:30）',
+            left: 'center',
+            top: 'top'
         },
         tooltip: {
-            trigger: 'item'
-        },
-        legend: {
-            orient: 'vertical',
-            left: 'left',
-            data: ['中国疫情图']
-        },
-        visualMap: {
-            type: 'piecewise',
-            pieces: [
-                {min: 1000, max: 1000000, label: '大于等于1000人', color: '#372a28'},
-                {min: 500, max: 999, label: '确诊500-999人', color: '#4e160f'},
-                {min: 100, max: 499, label: '确诊100-499人', color: '#974236'},
-                {min: 10, max: 99, label: '确诊10-99人', color: '#ee7263'},
-                {min: 1, max: 9, label: '确诊1-9人', color: '#f5bba7'},
-            ],
-            color: ['#E0022B', '#E09107', '#A3E00B']
+            trigger: 'item',
+            formatter: function(params) {
+                var value = params.value + '';
+                return params.seriesName + '<br/>' + params.name + ' : ' + value+'人';
+            }
         },
         toolbox: {
             show: true,
@@ -93,44 +83,47 @@
             left: 'right',
             top: 'center',
             feature: {
-                mark: {show: true},
-                dataView: {show: true, readOnly: false},
-                restore: {show: true},
-                saveAsImage: {show: true}
+                dataView: {
+                    readOnly: false
+                },
+                restore: {},
+                saveAsImage: {}
             }
         },
-        roamController: {
-            show: true,
-            left: 'right',
-            mapTypeControl: {
-                'china': true
-            }
+        visualMap: {
+            min: 0,
+            max: 2200000,
+            text: ['High', 'Low'],
+            realtime: false,
+            calculable: true,
+            color: ['orangered', 'yellow', 'lightskyblue']
         },
 
     };
 
     $.ajax({
-        url: "/query",
-        dataType: "json",
-        success:function(data) {
-            for (let i in data){
-                datalist[i] = data[i];
-                console.log(datalist[i]);
-            }
-            myChart.setOption({
-                series: [
-                    {
-                        name: '确诊数',
-                        type: 'map',
-                        mapType: 'china',
-                        getIndex: 0,
-                        data: datalist,
-                        label: {
-                            show: true,
-                            color: 'rgb(249, 249, 249)'
-                        },
-                    }
-                ]
+                        url: "/queryglobal",
+                        dataType: "json",
+                        success:function(data) {
+                            for (let i in data){
+                                datalist[i] = data[i];
+                                console.log(datalist[i]);
+                            }
+                            myChart.setOption({
+                                series: [{
+                                    name: '新型冠状病毒肺炎疫情地图',
+                                    type: 'map',
+                                    mapType: 'world',
+                                    data: datalist,
+                                    roam: true,
+                                    itemStyle: {
+                                        emphasis: {
+                                            label: {
+                                                show: true
+                                            }
+                                        }
+                                    },
+                                }]
             })
         }
     })
