@@ -46,6 +46,8 @@
 
 <script src="https://cdn.staticfile.org/layui/2.7.2/layui.js"></script>
 <script>
+    var Table;
+
     layui.use('jquery',function(){
         // 得到需要的内置组件
         var $ = layui.$;
@@ -70,7 +72,7 @@
         });
 
         // 执行一个 table 实例
-        table.render({
+        Table = table.render({
             elem: '#demo'
             ,height: 420
             ,url: '/querypage' //数据接口（此处为静态数据，仅作演示）
@@ -124,8 +126,13 @@
                 layer.confirm('真的删除行么', function(index){
                     obj.del(); //删除对应行（tr）的DOM结构
                     //向服务端发送删除指令
-                    $.post("/china/deletelie",{id: obj.data.id})
+                    $.post("/china/deletelie",{id: obj.data.id},function (res) {
+                        if (res.code(200)){
+                            Table.reload(true)
+                        }
+                    })
                     layer.close(index);
+
                 });
             }
         });
