@@ -68,7 +68,7 @@
         table.render({
             elem: '#demo'
             ,height: 420
-            ,url: '/static/json/table/user.json' //数据接口（此处为静态数据，仅作演示）
+            ,url: '/querypage' //数据接口（此处为静态数据，仅作演示）
             ,title: '用户表'
             ,page: true //开启分页
             ,toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
@@ -76,8 +76,8 @@
             ,cols: [ [ //表头
                 {type: 'checkbox', fixed: 'left'}
                 ,{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', totalRow: '合计：'}
-                ,{field: 'username', title: '用户名', width:80}
-                ,{field: 'experience', title: '积分', width: 90, sort: true, totalRow: '{{= d.TOTAL_NUMS }}'}
+                ,{field: 'name', title: '省份', width:80}
+                ,{field: 'value', title: '确诊数', width: 90, sort: true, totalRow: '{{= d.TOTAL_NUMS }}'}
                 ,{field: 'sex', title: '性别', width:80, sort: true}
                 ,{field: 'score', title: '评分', width: 80, sort: true, totalRow: true}
                 ,{field: 'city', title: '城市', width:150}

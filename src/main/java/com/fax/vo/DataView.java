@@ -13,4 +13,10 @@ public class DataView {
     private Long count = 0L;
     private Object data;
 
+    public DataView(Long count, Object data) {
+        this.count = count;
+        this.data = data;
+    }
+
+
 }
