@@ -33,8 +33,12 @@
 
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-    <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+    <button type="button" lay-event="update" class="layui-btn layui-btn-sm layui-btn-radius"><i
+       class="layui-icon layui-icon-edit"></i>编辑
+    </button>
+    <button type="button" lay-event="delete" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius"><i
+            class="layui-icon layui-icon-delete"></i>删除
+    </button>
 </script>
 
 
@@ -42,8 +46,9 @@
 
 <script src="https://cdn.staticfile.org/layui/2.7.2/layui.js"></script>
 <script>
-    layui.use(function(){
+    layui.use('jquery',function(){
         // 得到需要的内置组件
+        var $ = layui.$;
         var layer = layui.layer; //弹层
         var laypage = layui.laypage; //分页
         var laydate = layui.laydate; //日期
@@ -76,15 +81,9 @@
             ,cols: [ [ //表头
                 {type: 'checkbox', fixed: 'left'}
                 ,{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left', totalRow: '合计：'}
-                ,{field: 'name', title: '省份', width:80}
-                ,{field: 'value', title: '确诊数', width: 90, sort: true, totalRow: '{{= d.TOTAL_NUMS }}'}
-                ,{field: 'sex', title: '性别', width:80, sort: true}
-                ,{field: 'score', title: '评分', width: 80, sort: true, totalRow: true}
-                ,{field: 'city', title: '城市', width:150}
-                ,{field: 'sign', title: '签名', width: 200}
-                ,{field: 'classify', title: '职业', width: 100}
-                ,{field: 'words', title: '字数', width: 135, sort: true, totalRow: true}
-                ,{fixed: 'right', title: '操作', width: 150, align:'center', toolbar: '#barDemo'}
+                ,{field: 'name', title: '省份', width:150}
+                ,{field: 'value', title: '确诊数', width: 150, sort: true, totalRow: '{{= d.TOTAL_NUMS }}'}
+                ,{fixed: 'right', title: '操作', width: 200, align:'center', toolbar: '#barDemo'}
             ] ]
         });
 
@@ -115,38 +114,19 @@
             };
         });
 
-        // 单元格工具事件
-        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        // 删除与编辑单元格工具事件
+        table.on('tool(test)', function(obj){
             var data = obj.data //获得当前行数据
                 ,layEvent = obj.event; //获得 lay-event 对应的值
-            if(layEvent === 'detail'){
+            if(layEvent === 'update'){
                 layer.msg('查看操作');
-            } else if(layEvent === 'more'){
-                //下拉菜单
-                dropdown.render({
-                    elem: this //触发事件的 DOM 对象
-                    ,show: true //外部事件触发即显示
-                    ,data: [{
-                        title: '编辑'
-                        ,id: 'edit'
-                    },{
-                        title: '删除'
-                        ,id: 'del'
-                    }]
-                    ,click: function(menudata){
-                        if(menudata.id === 'del'){
-                            layer.confirm('真的删除行么', function(index){
-                                obj.del(); //删除对应行（tr）的DOM结构
-                                layer.close(index);
-                                //向服务端发送删除指令
-                            });
-                        } else if(menudata.id === 'edit'){
-                            layer.msg('编辑操作，当前行 ID:'+ data.id);
-                        }
-                    }
-                    ,align: 'right' //右对齐弹出
-                    ,style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' //设置额外样式
-                })
+            } else if(layEvent === 'delete'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构
+                    //向服务端发送删除指令
+                    $.post("/china/deletelie",{id: obj.data.id})
+                    layer.close(index);
+                });
             }
         });
 
@@ -185,7 +165,7 @@
         laypage.render({
             elem: 'pageDemo' //分页容器的id
             ,count: 1000 //数据总数
-            ,limit: 10 //每页显示的数据条数
+            ,limit: 1 //每页显示的数据条数
             ,skin: '#1E9FFF' //自定义选中色值
             //,layout: ['prev', 'page', 'next', 'count', 'limit', 'refresh', 'skip'] //自定义排版
             ,jump: function(obj, first){
