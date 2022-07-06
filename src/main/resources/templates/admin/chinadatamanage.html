@@ -40,6 +40,11 @@
 2：找到模板对应的js代码
 3：编写后端业务逻辑
 -->
+<!--导出中国疫情数据表的逻辑
+1：先增加一个有关导出的button按钮
+2：使用jquery向4后端发送请求
+3：编写后台业务逻辑
+-->
 <div th:include="commonmenu :: menu">
 </div>
 <!--要弹出的表格-->
@@ -104,6 +109,9 @@
                     </button>
                     <button type="reset" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-warm"><i
                     class="layui-icon layui-icon-refresh"></i><span>重置</span>
+                    </button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" lay-submit="" lay-filter=doOutput><i
+                            class="layui-icon layui-icon-search layui-icon-normal"></i>导出疫情数据
                     </button>
                 </div>
             </div>
@@ -223,6 +231,13 @@
             return false;
         });
 
+        //向后台发送导出疫情数据的请求
+        form.on("submit(doOutput)",function () {
+            window.location.href = "/dooutput";
+        });
+
+
+        //向后台发送增加或更新的请求
         form.on("submit(doAddOrUpdate)",function(data){
         $.post("/china/doaddorupdate",data.field,function (res) {
             if (res.code == 200){
