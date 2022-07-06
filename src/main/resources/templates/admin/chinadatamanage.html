@@ -30,11 +30,16 @@
 2：写一个有关新增的ajax请求
 3：后台根据请求地址写新增的逻辑代码1
 -->
+<!--修改的逻辑
+1: 对新增的方法进行复用
+2：更改后台新增的一个方法即可(saveorupdate)
+3：将前台的数据直接进行回显(细节点，id只对应#,没有#对应的就是表单中的lay-filter)
+-->
 <div th:include="commonmenu :: menu">
 </div>
 <!--要弹出的表格-->
 <div id="PopUpPage" style="display: none">
-<form action="" method="post" id="formpop" lay-filter="searchFrm" class="layui-form" >
+<form action="" method="post" id="formpop" lay-filter="formpop" class="layui-form" >
     <div class="layui-form-item">
         <div class="layui-inline">
             <lable class="layui-form-label">省份名称</lable>
@@ -49,7 +54,7 @@
             </div>
         </div>
         <div class="layui-inline">
-            <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" lay-submit="" lay-filter=doAdd><i
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" lay-submit="" lay-filter=doAddOrUpdate><i
                     class="layui-icon layui-icon-search layui-icon-normal"></i>新增
             </button>
             <button type="reset" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-warm"><i
@@ -149,20 +154,13 @@
 
         // 头工具栏事件
         table.on('toolbar(test)', function(obj){
-            var checkStatus = table.checkStatus(obj.config.id)
-                ,data = checkStatus.data; //获取选中的数据
+            var data = obj.data;
             switch(obj.event){
                 case 'add':
                     PopUpPage();
                     break;
                 case 'update':
-                    if(data.length === 0){
-                        layer.msg('请选择一行');
-                    } else if(data.length > 1){
-                        layer.msg('只能同时编辑一个');
-                    } else {
-                        layer.alert('编辑 [id]：'+ checkStatus.data[0].id);
-                    }
+                    PopUpPage(data);
                     break;
                 case 'delete':
                     if(data.length === 0){
@@ -179,7 +177,7 @@
             var data = obj.data //获得当前行数据
                 ,layEvent = obj.event; //获得 lay-event 对应的值
             if(layEvent === 'update'){
-                layer.msg('查看操作');
+                PopUpPage(data);
             } else if(layEvent === 'delete'){
                 layer.confirm('真的删除行么', function(index){
                     obj.del(); //删除对应行（tr）的DOM结构
@@ -207,25 +205,28 @@
             return false;
         });
 
-        form.on("submit(doAdd)",function(data){
-        $.post("/china/addnum",data.field,function (res) {
+        form.on("submit(doAddOrUpdate)",function(data){
+        $.post("/china/doaddorupdate",data.field,function (res) {
             if (res.code == 200){
                 Table.reload();
             }
             layer.msg(res.msg);
             layer.close(mainIndex);
-
         })}
         );
 
         //跳出弹窗的方法
-        function PopUpPage(){
+        function PopUpPage(data){
             mainIndex = layer.open({
                 type: 1,
                 closeBtn: 0,
                 shadeClose: true,
                 skin: 'layui-layer-rim',
-                content: $("#PopUpPage")
+                content: $("#PopUpPage"),
+                success: function () {
+                    $("#formpop")[0].reset();
+                    form.val("formpop",data);
+                }
             });
         }
 

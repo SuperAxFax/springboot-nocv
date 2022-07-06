@@ -23,10 +23,15 @@ public class ChinaOprate {
         return dataView;
     }
 
-    @RequestMapping("/addnum")
+    /**
+     * savaOrUpdate的原理是：如果前端传来的nocvdate中有id表示的就是修改，如果没有id表示的就是新增；
+     * @param nocvData
+     * @return
+     */
+    @RequestMapping("/doaddorupdate")
     @ResponseBody
-    public DataView addNum(NocvData nocvData){
-        boolean save = indexService.save(nocvData);
+    public DataView doAddOrUpdate(NocvData nocvData){
+        boolean save = indexService.saveOrUpdate(nocvData);
         DataView dataView = new DataView();
         if (save){
             dataView.setCode(200);
