@@ -25,6 +25,11 @@
 2：把模板包装在一个函数中，让监听函数在合适的时间执行这个函数
 3：编写要弹出的内容，并让弹窗函数与其产生关联
 -->
+<!--在弹出的窗口中完成新增操作的逻辑代码
+1：前台的button按钮中标注好对应的方法名
+2：写一个有关新增的ajax请求
+3：后台根据请求地址写新增的逻辑代码1
+-->
 <div th:include="commonmenu :: menu">
 </div>
 <!--要弹出的表格-->
@@ -40,12 +45,12 @@
         <div class="layui-inline">
             <lable class="layui-form-label">确诊数量</lable>
             <div class="layui-input-inline">
-                <input type="text" name="name" id="value1" class="layui-input input-radius" placeholder="请输入确诊数量">
+                <input type="text" name="value" id="value1" class="layui-input input-radius" placeholder="请输入确诊数量">
             </div>
         </div>
         <div class="layui-inline">
-            <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" lay-submit="" lay-filter=doSearch><i
-                    class="layui-icon layui-icon-search layui-icon-normal"></i>查询
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" lay-submit="" lay-filter=doAdd><i
+                    class="layui-icon layui-icon-search layui-icon-normal"></i>新增
             </button>
             <button type="reset" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-warm"><i
                     class="layui-icon layui-icon-refresh"></i><span>重置</span>
@@ -202,6 +207,13 @@
             return false;
         });
 
+        form.on("submit(doAdd)",function(data){
+        $.post("/china/addnum",data.field,function (res) {
+            Table.reload();
+        })}
+        )
+
+        //跳出弹窗的方法
         function PopUpPage(){
             layer.open({
                 type: 1,

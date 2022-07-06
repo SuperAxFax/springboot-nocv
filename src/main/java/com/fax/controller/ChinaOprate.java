@@ -1,5 +1,6 @@
 package com.fax.controller;
 
+import com.fax.entity.NocvData;
 import com.fax.service.IndexService;
 import com.fax.vo.DataView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,11 @@ public class ChinaOprate {
         DataView dataView = new DataView();
         dataView.setCode(200);
         return dataView;
+    }
+
+    @RequestMapping("/addnum")
+    @ResponseBody
+    public void addNum(NocvData nocvData){
+        indexService.save(nocvData);
     }
 }
