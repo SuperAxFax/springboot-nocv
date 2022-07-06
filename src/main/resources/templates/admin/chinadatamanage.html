@@ -20,9 +20,39 @@
     </style>
 </head>
 <body>
-
+<!--增加一个新弹窗的思路
+1：想或的一个弹窗的模板
+2：把模板包装在一个函数中，让监听函数在合适的时间执行这个函数
+3：编写要弹出的内容，并让弹窗函数与其产生关联
+-->
 <div th:include="commonmenu :: menu">
-
+</div>
+<!--要弹出的表格-->
+<div id="PopUpPage" style="display: none">
+<form action="" method="post" id="formpop" lay-filter="searchFrm" class="layui-form" >
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <lable class="layui-form-label">省份名称</lable>
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="name1" class="layui-input input-radius" placeholder="请输入城市名称">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <lable class="layui-form-label">确诊数量</lable>
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="value1" class="layui-input input-radius" placeholder="请输入确诊数量">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" lay-submit="" lay-filter=doSearch><i
+                    class="layui-icon layui-icon-search layui-icon-normal"></i>查询
+            </button>
+            <button type="reset" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-warm"><i
+                    class="layui-icon layui-icon-refresh"></i><span>重置</span>
+            </button>
+        </div>
+    </div>
+</form>
 </div>
 <div class="layui-body">
     <!-- 内容主体区域 -->
@@ -118,7 +148,7 @@
                 ,data = checkStatus.data; //获取选中的数据
             switch(obj.event){
                 case 'add':
-                    layer.msg('添加');
+                    PopUpPage();
                     break;
                 case 'update':
                     if(data.length === 0){
@@ -170,7 +200,18 @@
                 }
             });
             return false;
-        })
+        });
+
+        function PopUpPage(){
+            layer.open({
+                type: 1,
+                closeBtn: 0,
+                shadeClose: true,
+                skin: 'layui-layer-rim',
+                content: $("#PopUpPage")
+            });
+        }
+
 
         // 将日期直接嵌套在指定容器中
         var dateIns = laydate.render({
