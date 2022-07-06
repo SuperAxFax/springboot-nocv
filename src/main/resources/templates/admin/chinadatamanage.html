@@ -27,6 +27,29 @@
 <div class="layui-body">
     <!-- 内容主体区域 -->
     <div style="padding: 15px;">
+        <!--fieldset：对表单进行分组-->
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 15px">
+            <legend>搜索条件</legend>
+        </fieldset>
+        <form action="" method="post" id="searchFrm" lay-filter="searchFrm" class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <lable class="layui-form-label">省份名称</lable>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" id="name" class="layui-input input-radius" placeholder="请输入城市名称">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" lay-submit="" lay-filter=doSearch><i
+                    class="layui-icon layui-icon-search layui-icon-normal"></i>查询
+                    </button>
+                    <button type="reset" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-warm"><i
+                    class="layui-icon layui-icon-refresh"></i><span>重置</span>
+                    </button>
+                </div>
+            </div>
+        </form>
         <table class="layui-hide" id="demo" lay-filter="test"></table>
     </div>
 </div>
@@ -60,7 +83,7 @@
         var element = layui.element; //元素操作
         var slider = layui.slider; //滑块
         var dropdown = layui.dropdown; //下拉菜单
-
+        var form = layui.form;
         // 向世界问个好
         layer.msg('Hello World');
 
@@ -137,14 +160,17 @@
             }
         });
 
-        // 执行一个轮播实例
-        carousel.render({
-            elem: '#test1'
-            ,width: '100%' //设置容器宽度
-            ,height: 200
-            ,arrow: 'none' //不显示箭头
-            ,anim: 'fade' //切换动画方式
-        });
+
+        //模糊查询
+        form.on("submit(doSearch)",function (data) {
+            Table.reload({
+                where: data.field,
+                page:{
+                    curr: 1
+                }
+            });
+            return false;
+        })
 
         // 将日期直接嵌套在指定容器中
         var dateIns = laydate.render({
@@ -182,25 +208,7 @@
             }
         });
 
-        // 上传
-        upload.render({
-            elem: '#uploadDemo'
-            ,url: '' //此处配置你自己的上传接口即可
-            ,done: function(res){
-                layer.msg('上传成功');
-                layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', res.files.file);
-                console.log(res)
-            }
-            ,before: function(){
-                layer.msg('上传中', {icon: 16, time: 0});
-            }
-        });
 
-        // 滑块
-        var sliderInst = slider.render({
-            elem: '#sliderDemo'
-            ,input: true //输入框
-        });
 
         // 底部信息
         var footerTpl = lay('#footer')[0].innerHTML;
