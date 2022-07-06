@@ -35,6 +35,11 @@
 2：更改后台新增的一个方法即可(saveorupdate)
 3：将前台的数据直接进行回显(细节点，id只对应#,没有#对应的就是表单中的lay-filter)
 -->
+<!--完成拖拽上传excel表格的逻辑
+1：先找到拖拽上传的组件模板
+2：找到模板对应的js代码
+3：编写后端业务逻辑
+-->
 <div th:include="commonmenu :: menu">
 </div>
 <!--要弹出的表格-->
@@ -64,9 +69,22 @@
     </div>
 </form>
 </div>
+
 <div class="layui-body">
+
+
     <!-- 内容主体区域 -->
     <div style="padding: 15px;">
+
+        <!--拖拽上传-->
+        <div class="layui-upload-drag" id="test10">
+            <i class="layui-icon"></i>
+            <p>点击上传，或将文件拖拽到此处</p>
+            <div class="layui-hide" id="uploadDemoView">
+                <hr>
+                <img src="" alt="上传成功后渲染" style="max-width: 100px">
+            </div>
+        </div>
         <!--fieldset：对表单进行分组-->
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 15px">
             <legend>搜索条件</legend>
@@ -111,7 +129,7 @@
 <script>
     var Table;
     var mainIndex;
-    layui.use('jquery',function(){
+    layui.use(['upload','jquery'],function(){
         // 得到需要的内置组件
         var $ = layui.$;
         var layer = layui.layer; //弹层
@@ -230,6 +248,18 @@
             });
         }
 
+        //拖拽上传
+        upload.render({
+            elem: '#test10'
+            ,url: '/excelupload' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+            ,accept: 'file' //普通文件
+            ,done: function(res) {
+                if (res.code == 200) {
+                    layer.msg(res.msg);
+                }
+                console.log(res);
+            }
+        });
 
         // 将日期直接嵌套在指定容器中
         var dateIns = laydate.render({

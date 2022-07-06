@@ -11,9 +11,10 @@
 </head>
 <body>
 <!--使用thymeleaf来标识这是个功能组件，别的页面可以引入-->
-<div th:fragment="menu" class="layui-layout layui-layout-admin">
+<div th:fragment="menu">
+<div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo layui-hide-xs layui-bg-black">中国疫情地图数据展示</div>
+        <div class="layui-logo layui-hide-xs ">中国疫情地图数据展示</div>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             <!-- 移动端显示 -->
@@ -65,7 +66,6 @@
                         <dd><a href="/tobar">疫情柱状图</a></dd>
                         <dd><a href="/toline">疫情折线图</a></dd>
                         <dd><a href="/toglobal">全球疫情图</a></dd>
-                        <dd><a href="">the links</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -88,6 +88,7 @@
         <!-- 底部固定区域 -->
         底部固定区域
     </div>
+</div>
 </div>
 </body>
 </html>
