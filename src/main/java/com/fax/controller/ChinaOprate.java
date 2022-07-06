@@ -25,7 +25,17 @@ public class ChinaOprate {
 
     @RequestMapping("/addnum")
     @ResponseBody
-    public void addNum(NocvData nocvData){
-        indexService.save(nocvData);
+    public DataView addNum(NocvData nocvData){
+        boolean save = indexService.save(nocvData);
+        DataView dataView = new DataView();
+        if (save){
+            dataView.setCode(200);
+            dataView.setMsg("数据插入成功！");
+        }else {
+            dataView.setCode(100);
+            dataView.setMsg("数据插入失败！");
+        }
+        System.out.println(dataView);
+        return dataView;
     }
 }

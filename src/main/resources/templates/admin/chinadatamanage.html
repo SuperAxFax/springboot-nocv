@@ -105,7 +105,7 @@
 <script src="https://cdn.staticfile.org/layui/2.7.2/layui.js"></script>
 <script>
     var Table;
-
+    var mainIndex;
     layui.use('jquery',function(){
         // 得到需要的内置组件
         var $ = layui.$;
@@ -209,13 +209,18 @@
 
         form.on("submit(doAdd)",function(data){
         $.post("/china/addnum",data.field,function (res) {
-            Table.reload();
+            if (res.code == 200){
+                Table.reload();
+            }
+            layer.msg(res.msg);
+            layer.close(mainIndex);
+
         })}
-        )
+        );
 
         //跳出弹窗的方法
         function PopUpPage(){
-            layer.open({
+            mainIndex = layer.open({
                 type: 1,
                 closeBtn: 0,
                 shadeClose: true,
