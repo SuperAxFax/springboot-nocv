@@ -23,9 +23,24 @@
 <div th:include="commonmenu :: menu">
 
 </div>
+
+
 <div class="layui-body">
     <!-- 内容主体区域 -->
+    <!--按钮-->
     <div style="padding: 15px;">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 60px;">
+            <legend>全国疫情数据实时显示---统计截止时间:<span th:text="${#dates.format(apiData.datatime,'yyyy-MM-dd HH-mm-ss')}"></span></legend>
+        </fieldset>
+
+        <div class="layui-btn-container">
+            <button type="button" class="layui-btn layui-btn-primary">原始按钮</button>
+            <button type="button" class="layui-btn">默认按钮</button>
+            <button type="button" class="layui-btn layui-btn-normal" th:text="'确诊人数:'+${apiData.confirm}">百搭按钮</button>
+            <button type="button" class="layui-btn layui-btn-warm" th:text="'输入人数:'+${apiData.input}">暖色按钮</button>
+            <button type="button" class="layui-btn layui-btn-danger" th:text="'治愈人数:'+${apiData.heal}">警告按钮</button>
+            <button type="button" class="layui-btn layui-btn-disabled" th:text="'死亡人数:'+${apiData.dead}">禁用按钮</button>
+        </div>
         <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
         <div id="main" style="width: 900px;height:600px;"></div>
     </div>
