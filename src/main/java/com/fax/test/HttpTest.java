@@ -1,9 +1,12 @@
 package com.fax.test;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fax.entity.NocvApiData;
+import com.fax.entity.NocvData;
 import com.fax.service.ApiService;
+import com.fax.service.IndexService;
 import com.fax.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,11 +14,16 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class HttpTest {
     @Autowired
     private ApiService apiService;
+
+    @Autowired
+    private IndexService indexService;
 
     @Scheduled(fixedDelay = 10000)
     public void apitest() throws Exception {
@@ -69,5 +77,37 @@ public class HttpTest {
         nocvApiData.setDatatime(simpleDateFormat.parse(String.valueOf(overseaLastUpdateTime)));
         boolean save = apiService.save(nocvApiData);
         System.out.println(save);
+
+    //3：获取从api接口中得到的省份疫情json数据
+        //1：获取中国疫情json数据
+        JSONArray areaTree = chinaTotal.getJSONArray("areaTree");
+        Object[] areaTree1 = areaTree.toArray();
+        JSONObject areTree2 = JSON.parseObject(areaTree1[2].toString());
+        System.out.println(areTree2);
+        //2：获取省份疫情数据
+        JSONArray children = areTree2.getJSONArray("children");
+        Object[] objects = children.toArray();
+        List<NocvData> prolist = new ArrayList<>();
+        for (int i = 0; i < objects.length; i++) {
+            JSONObject projson = JSON.parseObject(objects[i].toString());
+            Object name = projson.get("name");
+            Object lastUpdateTime = projson.get("lastUpdateTime");
+            Object total2 = projson.get("total");
+            JSONObject prototal = JSON.parseObject(total2.toString());
+            Object confirm1 = prototal.get("confirm");
+            NocvData nocvData = new NocvData();
+            nocvData.setName(name.toString());
+            nocvData.setValue(Integer.parseInt(confirm1.toString()));
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            nocvData.setUpdatetime(format.parse(String.valueOf(lastUpdateTime)));
+            prolist.add(nocvData);
+           /* System.out.println(name);
+            System.out.println(lastUpdateTime);
+            System.out.println(confirm1);*/
+        }
+        //3：执行插入操作
+        boolean b = indexService.saveBatch(prolist);
+        System.out.println(b);
+
     }
 }
