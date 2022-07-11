@@ -20,6 +20,8 @@ public class ApiController {
         NocvApiData apiData = apiService.getById(id);
         model.addAttribute("apiData",apiData);
         System.out.println(apiData);
+
+        
         return "index";
     }
 

@@ -37,8 +37,7 @@ public class IndexController {
     @RequestMapping("/query")
     @ResponseBody//作用是将List序列化成为一个json实体
     public List<NocvData> queryDta(){
-        List<NocvData> list = indexService.list();
-        System.out.println("list的值为"+list);
+        List<NocvData> list = indexService.querylimit34();
         return list;
     }
 

@@ -25,7 +25,7 @@ public class HttpTest {
     @Autowired
     private IndexService indexService;
 
-    @Scheduled(fixedDelay = 10000)
+    /*@Scheduled(fixedDelay = 10000)*/
     public void apitest() throws Exception {
 
         HttpUtil httpUtil = new HttpUtil();
@@ -78,7 +78,7 @@ public class HttpTest {
         boolean save = apiService.save(nocvApiData);
         System.out.println(save);
 
-    //3：获取从api接口中得到的省份疫情json数据
+    //3：获取从api接口中得到的省份疫K情json数据
         //1：获取中国疫情json数据
         JSONArray areaTree = chinaTotal.getJSONArray("areaTree");
         Object[] areaTree1 = areaTree.toArray();

@@ -13,5 +13,9 @@ import java.util.List;
 public interface IndexMapper extends BaseMapper<NocvData> {
     @Select("select * from nocv_line order by createtime limit 7")
     List<NocvLine> querydataDao();
+
+    //查询nocv_data表中后34位的数据
+    @Select("select * from nocv_data order by id desc limit 34")
+    List<NocvData> querylimit34();
 }
 
