@@ -25,7 +25,9 @@ public class HttpTest {
     @Autowired
     private IndexService indexService;
 
+/*
     @Scheduled(fixedDelay = 10000)
+*/
     public void apitest() throws Exception {
 
         HttpUtil httpUtil = new HttpUtil();
