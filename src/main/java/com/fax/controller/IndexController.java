@@ -44,8 +44,8 @@ public class IndexController {
     //查询饼状图中的数据
     @RequestMapping("/querypie")
     @ResponseBody
-    public List<NocvPie> queryPie(){
-        List<NocvPie> list = pieService.list();
+    public List<NocvData> queryPie(){
+        List<NocvData> list = indexService.querylimit34();
         return list;
     }
 
@@ -84,7 +84,7 @@ public class IndexController {
     @ResponseBody
     public Map<String,List<Object>> queryBar(){
         //查询后端数据
-        List<NocvData> list = indexService.list();
+        List<NocvData> list = indexService.querylimit34();
         //获取数据中的name值
         List<String> name = new ArrayList<>();
         for (NocvData data : list) {
