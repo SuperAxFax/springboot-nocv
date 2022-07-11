@@ -13,11 +13,11 @@
 		<div class="login_face"><img th:src="@{/images/login.jpg}" class="userAvatar"></div>
 		<div class="layui-form-item input-item">
 			<label for="username">用户名</label>
-			<input type="text" placeholder="请输入用户名" autocomplete="off" id = "userName" name="loginname" class="layui-input" lay-verify="required">
+			<input type="text" placeholder="请输入用户名" autocomplete="off" id = "userName" name="username" class="layui-input" lay-verify="required">
 		</div>
 		<div class="layui-form-item input-item">
 			<label for="password">密码</label>
-			<input type="password" placeholder="请输入密码" autocomplete="off" id = "password" name="pwd" class="layui-input" lay-verify="required">
+			<input type="password" placeholder="请输入密码" autocomplete="off" id = "password" name="password" class="layui-input" lay-verify="required">
 		</div>
 		<div class="layui-form-item input-item" id="imgCode">
 			<label for="code">验证码</label>
@@ -57,7 +57,7 @@
 					}else{
 						//跳转到templates/system/index/index.html页面
 						layer.msg(rs.msg);
-						location.href="/sys/index";
+						location.href="/index";
 					}
 				});
 				return false;
