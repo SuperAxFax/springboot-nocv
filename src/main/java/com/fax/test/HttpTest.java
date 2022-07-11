@@ -25,7 +25,7 @@ public class HttpTest {
     @Autowired
     private IndexService indexService;
 
-    /*@Scheduled(fixedDelay = 10000)*/
+    @Scheduled(fixedDelay = 10000)
     public void apitest() throws Exception {
 
         HttpUtil httpUtil = new HttpUtil();
@@ -95,9 +95,13 @@ public class HttpTest {
             Object total2 = projson.get("total");
             JSONObject prototal = JSON.parseObject(total2.toString());
             Object confirm1 = prototal.get("confirm");
+            Object suspect1 = prototal.get("suspect");
+            Object heal1 = prototal.get("heal");
+            Object dead1 = prototal.get("dead");
+            Integer confirmnow = Integer.parseInt(confirm1.toString()) - Integer.parseInt(suspect1.toString()) -Integer.parseInt(heal1.toString()) -Integer.parseInt(dead1.toString());
             NocvData nocvData = new NocvData();
             nocvData.setName(name.toString());
-            nocvData.setValue(Integer.parseInt(confirm1.toString()));
+            nocvData.setValue(confirmnow);
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             nocvData.setUpdatetime(format.parse(String.valueOf(lastUpdateTime)));
             prolist.add(nocvData);
