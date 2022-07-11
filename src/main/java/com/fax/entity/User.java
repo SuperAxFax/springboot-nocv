@@ -20,6 +20,7 @@ public class User {
     private Integer age;
     private String phone;
     private String address;
+    private String img;
 
     private Integer roleId;
     private Integer xueyuanId;
