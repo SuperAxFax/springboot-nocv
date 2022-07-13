@@ -26,7 +26,7 @@ public class HttpTest {
     private IndexService indexService;
 
 /*
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 100000)
 */
     public void apitest() throws Exception {
 

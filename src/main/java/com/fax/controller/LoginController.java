@@ -6,6 +6,9 @@ import cn.hutool.http.HttpResponse;
 import com.fax.entity.User;
 import com.fax.service.UserService;
 import com.fax.vo.DataView;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +51,16 @@ public class LoginController {
     @RequestMapping("/login/login")
     @ResponseBody
     public DataView login(String username, String password, String code, HttpSession session){
+/*
+        //普通登录
         User user = userService.check(username,password);
+*/
+        //引入Shiro之后的Shiro登录
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        subject.login(token);
+        User user = (User) subject.getPrincipal();
+        //给session赋值
         String sessioncode = (String) session.getAttribute("code");
         DataView dataView = new DataView();
         if (sessioncode.equals(code)){

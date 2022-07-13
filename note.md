@@ -3,7 +3,7 @@
 1:先改造前台，看看前端需要什么样的数据。再来构造数据库
 2：该网站定位：完全可以作为一个脚手架来用。
 
-3:Shiro简介
+3:Shiro简介(参考地址：http://www.51gjie.com/javaweb/1141.html)
 - 一个轻量级的安全框架。没有SpringSecurity这么大。
 - 主要包括三个部分：
 - 1：Subject**:**主体，应用代码直接交互的对象是Subject,也就是说Shiro的对外API核心就是Subject，代表了当前用户，
@@ -15,4 +15,5 @@ Subject;可以看出它是Shiro的核心（抓住核心），它负责与后边�
 把它看成前端的DispatcherServlet前端控制器。
 - 3：Realm**：**域，Shiro从Realm获取安全数据(如角色，用户，权限)，也就是说SecurityManager要验证用户身份，
 那么它需要从Realm获取相应的用户进行比较以确定用户身份是否合法；也需要从Realm得到用户相应的角色/权限进行验证
-用户是否能进行操作；可以把Realm看成DataSource。即安全数据源。
+用户是否能进行操作；可以把Realm看成DataSource。即安全数据源。（Shiro内置了可以连接大量安全数据源的Realm,如LDAP,关系数据库（JDBC），类似INI的
+文本配置资源以及属性文件等）

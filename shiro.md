@@ -1,30 +1,60 @@
-package com.fax.config;
+#Shiro整合Springboot步骤
+- 1：导入依赖
+```xml
+<!--引入shiro安全框架-->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+        <!--shiro和thymeleaf集成的扩展依赖，为了能够在页面使用xsln:shiro的标签-->
+        <dependency>
+            <groupId>com.github.theborakompanioni</groupId>
+            <artifactId>thymeleaf-extras-shiro</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+```
+- 2：编写UserRealm类
+```java
+public class UserRealm extends AuthorizingRealm {
 
-import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
-import com.fax.realm.UserRealm;
-import lombok.Data;
-import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
-import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.DelegatingFilterProxy;
+    @Autowired
+    private UserService userService;
 
-import javax.servlet.Filter;
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * @Author: Coding路人王
- * @Date: 2019/11/21 21:01
- */
+    @Override
+    public String getName(){
+        return this.getClass().getSimpleName();
+    }
+    /*
+    * 授权
+    * */
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        return null;
+    }
+    /*
+    * 认证
+    * */
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",authenticationToken.getPrincipal().toString());
+        User user = userService.getOne(queryWrapper);
+        if (user!=null){
+            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPassword(), this.getName());
+            return info;
+        }
+        return null;
+    }
+}
+```
+- 3：引入ShiroConfig配置
+```java
 @Configuration
 @ConditionalOnWebApplication(type = Type.SERVLET)
 @ConditionalOnClass(value = { SecurityManager.class })
@@ -149,3 +179,29 @@ public class ShiroConfig {
         return new ShiroDialect();
     }
 }
+
+```
+- 4：更改LoginController下的登录方式
+```java
+//引入Shiro之后的Shiro登录
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        subject.login(token);
+        User user = (User) subject.getPrincipal();
+```
+- 5：在application.yml下配置Shiro的放行与禁止访问地址
+```yml
+#shiro配置路径
+shiro:
+  anon-urls:
+    - /css/**
+    - /images/**
+    - /layui/**
+    - /login/login
+    - /login/getCode
+    - /login*
+  login-url: /index.html
+  log-out-url: /logout*
+  authc-ulrs:
+    - /**
+```
