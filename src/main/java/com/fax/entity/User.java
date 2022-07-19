@@ -25,4 +25,5 @@ public class User {
     private Integer roleId;
     private Integer xueyuanId;
     private Integer banjiId;
+    private Integer teacherId;
 }
