@@ -18,5 +18,7 @@ public class DataView {
         this.data = data;
     }
 
-
+    public DataView(Object data) {
+        this.data = data;
+    }
 }
