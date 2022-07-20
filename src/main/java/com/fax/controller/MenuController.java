@@ -13,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.util.resources.cldr.vai.CalendarData_vai_Vaii_LR;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MenuController {
@@ -46,6 +49,10 @@ public class MenuController {
         return new DataView(page.getTotal(),page.getRecords());
     }
 
+    /**
+     * 初始化下拉菜单
+     * @return
+     */
     @RequestMapping("/menu/loadMenuManagerLeftTreeJson")
     @ResponseBody
     public DataView loadtree(){
@@ -56,6 +63,35 @@ public class MenuController {
             treeNodes.add(new TreeNode(menu.getId(),menu.getPid(),menu.getTitle(),open));
         }
         DataView dataView = new DataView(treeNodes);
+        return dataView;
+    }
+
+    /**
+     * 初始化排序码，让排序码变为最大值加一
+     * @return
+     */
+    @RequestMapping("/menu/loadMenuMaxOrderNum")
+    @ResponseBody
+    public Map<String,Object> initnumber(){
+        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("ordernum");
+        IPage<Menu> page = new Page<>(1,1);
+        List<Menu> records = menuService.page(page, queryWrapper).getRecords();
+        Map map = new HashMap<>();
+        map.put("value",records.get(0).getOrdernum()+1);
+        return map;
+    }
+
+    @RequestMapping("/menu/addMenu")
+    @ResponseBody
+    public DataView addMenu(Menu menu){
+        menuService.save(menu);
+        DataView dataView = new DataView();
+        if (!(menu==null)){
+            dataView.setMsg("菜单新增成功！");
+            return dataView;
+        }
+        dataView.setMsg("菜单新增失败！");
         return dataView;
     }
 }
