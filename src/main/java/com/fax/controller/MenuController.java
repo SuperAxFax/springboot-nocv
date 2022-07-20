@@ -82,6 +82,11 @@ public class MenuController {
         return map;
     }
 
+    /**
+     * 新增菜单
+     * @param menu
+     * @return
+     */
     @RequestMapping("/menu/addMenu")
     @ResponseBody
     public DataView addMenu(Menu menu){
@@ -94,4 +99,63 @@ public class MenuController {
         dataView.setMsg("菜单新增失败！");
         return dataView;
     }
+
+    /**
+     * 更新菜单
+     * @return
+     */
+    @RequestMapping("/menu/updateMenu")
+    @ResponseBody
+    public DataView updateMenu(Menu menu){
+        boolean update = menuService.updateById(menu);
+        DataView dataView = new DataView();
+        if (update){
+            dataView.setMsg("菜单更新成功");
+            dataView.setCode(200);
+            return dataView;
+        }
+        dataView.setMsg("菜单更新失败");
+        dataView.setCode(100);
+        return dataView;
+    }
+
+    /**
+     * 判断当前菜单是否是父菜单
+     * @return
+     */
+    @RequestMapping("/menu/checkMenuHasChildrenNode")
+    @ResponseBody
+    public Map<String,Object> checkMenuHasChildrenNode(Menu menu){
+        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("pid", menu.getId());
+        List<Menu> list = menuService.list(queryWrapper);
+        Map map = new HashMap<>();
+        if (list.size()>0){//说明该菜单是父菜单，不可以删除
+            map.put("value",true);
+        }else {
+            map.put("value",false);
+        }
+        return map;
+    }
+
+    /**
+     * 真正的删除操作
+     * @return
+     */
+    @RequestMapping("/menu/deleteMenu")
+    @ResponseBody
+    public DataView deleteMenu(Menu menu){
+        boolean remove = menuService.removeById(menu.getId());
+        DataView dataView = new DataView();
+        if (remove){
+            dataView.setMsg("菜单删除成功！");
+            dataView.setCode(200);
+            return dataView;
+        }
+        dataView.setMsg("菜单删除失败！");
+        dataView.setCode(100);
+        return dataView;
+    }
+
+
 }
