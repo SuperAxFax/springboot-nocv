@@ -14,6 +14,7 @@ shiro:
     - /login/login
     - /login/getCode
     - /login*
+    - /layui_ext/**
   login-url: /index.html
   log-out-url: /logout*
   authc-ulrs:
