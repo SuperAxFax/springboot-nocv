@@ -5,3 +5,18 @@ spring:
     url: jdbc:mysql://localhost:3306/nocv?serverTimezone=UTC&useSSL=false&characterEncoding=utf-8
     driver-class-name: com.mysql.jdbc.Driver
 
+#shiro配置路径
+shiro:
+  anon-urls:
+    - /css/**
+    - /images/**
+    - /layui/**
+    - /login/login
+    - /login/getCode
+    - /login*
+    - /layui_ext/**
+    - /js/**
+  login-url: /index.html
+  log-out-url: /logout*
+  authc-ulrs:
+    - /**
