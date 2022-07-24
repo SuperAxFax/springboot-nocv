@@ -13,7 +13,7 @@ public class ApiController {
 
     @Autowired
     private ApiService apiService;
-    @RequestMapping("/")
+    @RequestMapping("/in")
     public String toindex(Model model){
         //1：查询数据库最后一列的数据
         Integer id = apiService.getMaxId();
@@ -23,5 +23,14 @@ public class ApiController {
         return "index";
     }
 
+    @RequestMapping("/tochina")
+    public String tochina(Model model){
+        //1：查询数据库最后一列的数据
+        Integer id = apiService.getMaxId();
+        NocvApiData apiData = apiService.getById(id);
+        model.addAttribute("apiData",apiData);
+        System.out.println(apiData);
+        return "china";
+    }
 
 }

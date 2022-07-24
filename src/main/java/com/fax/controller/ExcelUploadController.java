@@ -81,7 +81,7 @@ public class ExcelUploadController {
             sheetRow.createCell(0).setCellValue(nocvData.getName());
             sheetRow.createCell(1).setCellValue(nocvData.getValue());
         }
-           //..3：调整reponse的页面格式，不然会乱码
+           //3：调整reponse的页面格式，不然会乱码
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/octet-stream;chartset=utf8");
         response.setHeader("Content-Disposition","attachment;filename="+ new String("中国疫情数据表".getBytes(),"iso-8859-1")+".xlsx");

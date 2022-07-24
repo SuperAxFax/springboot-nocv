@@ -205,3 +205,20 @@ shiro:
   authc-ulrs:
     - /**
 ```
+
+
+#shiro配置路径
+shiro:
+  anon-urls:
+    - /css/**
+    - /images/**
+    - /layui/**
+    - /login/login
+    - /login/getCode
+    - /login*
+    - /layui_ext/**
+    - /js/**
+  login-url: /index.html
+  log-out-url: /logout*
+  authc-ulrs:
+    - /**

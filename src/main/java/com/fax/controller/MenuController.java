@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fax.entity.Menu;
 import com.fax.service.MenuService;
 import com.fax.util.TreeNode;
+import com.fax.util.TreeNodeBuilder;
 import com.fax.vo.DataView;
 import com.fax.vo.MenuDataVo;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import sun.util.resources.cldr.vai.CalendarData_vai_Vaii_LR;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -155,6 +155,33 @@ public class MenuController {
         dataView.setMsg("菜单删除失败！");
         dataView.setCode(100);
         return dataView;
+    }
+
+
+    /**
+     * 建立菜单menu的层级关系
+     * @return
+     */
+    @RequestMapping("/menu/loadIndexLeftMenuJson")
+    @ResponseBody
+    public DataView tomenu(Menu menu){
+        //从数据库获取树结点信息
+        //遍历得到的结点信息并放入TreeNode中
+        List<Menu> list = menuService.list();
+        ArrayList<TreeNode> treenode = new ArrayList<>();
+        for (Menu menu1 : list) {
+            Integer id = menu1.getId();
+            Integer pid = menu1.getPid();
+            String title = menu1.getTitle();
+            String icon = menu1.getIcon();
+            String href = menu1.getHref();
+            boolean b = menu1.getOpen().equals(1) ? true : false;
+            treenode.add(new TreeNode(id,pid,title,icon,href,b));
+        }
+
+        //建立层级关系
+        List<TreeNode> build = TreeNodeBuilder.build(treenode, 0);
+        return new DataView(build);
     }
 
 
