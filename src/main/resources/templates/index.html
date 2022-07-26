@@ -27,7 +27,8 @@
                     <li class="layui-nav-item" id="userInfo">
                         <a href="javascript:;"><img th:src="${session.user.img}" class="layui-nav-img userAvatar" width="35" height="35"><cite class="adminName" th:text="${session.user.username}"></cite></a>
                         <dl class="layui-nav-child">
-                            <dd><a href="javascript:;"><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>修改密码</cite></a></dd>
+                            <dd><a th:href="@{/tochangepassword}"><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>修改密码</cite></a></dd>
+                            <dd><a th:href="@{/userinfo}"><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>个人信息</cite></a></dd>
                             <dd><a th:href="@{/login/logout}" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
                         </dl>
                     </li>
