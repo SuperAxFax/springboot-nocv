@@ -1,6 +1,7 @@
 package com.fax.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -26,4 +27,10 @@ public class User {
     private Integer xueyuanId;
     private Integer banjiId;
     private Integer teacherId;
+
+    //非数据库列，但是需要临时用一下
+    @TableField(exist = false)
+    private String banjiName;
+    @TableField(exist = false)
+    private String xueyuanName;
 }
