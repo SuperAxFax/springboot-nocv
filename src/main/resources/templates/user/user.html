@@ -96,7 +96,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">所属学院</label>
                 <div class="layui-input-block">
-                    <select name="xueYuanId" id="xueyuan" lay-filter="aihao">
+                    <select name="xueyuanId" id="xueyuan" lay-filter="aihao">
                         <option value=""></option>
                         <option value="0">写作</option>
                     </select>
@@ -105,7 +105,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">所属班级</label>
                 <div class="layui-input-block">
-                    <select name="banJiId" id="banji" lay-filter="aihao">
+                    <select name="banjiId" id="banji" lay-filter="aihao">
                         <option value=""></option>
                         <option value="0">写作</option>
                     </select>
@@ -139,14 +139,6 @@
                 <label class="layui-form-label">年龄</label>
                 <div class="layui-input-block">
                     <input type="text" name="age" id="age" class="layui-input input-radius" placeholder="请输入用户地址">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">身份证</label>
-                <div class="layui-input-block">
-                    <textarea placeholder="请输入用户身份证" class="layui-textarea" name="card" cols="200"></textarea>
                 </div>
             </div>
         </div>
@@ -292,26 +284,25 @@
                 title: '添加用户',
                 success: function () {
                     $("#dataFrm")[0].reset();
-
                     url = "/user/addUser";
-                    //初始化下拉列表
+                    //初始化班级的下拉列表
                     $.get("/user/listallbanji", function (res) {
                         var banji = res;
                         var dom_banji = $("#banji");
                         var html = "<option value=''>选择班级</option>";
                         $.each(banji,function (index,item) {
-                            html+="<option value=''>"+item.name+"</option>";
+                            html+="<option value='"+item.id+"'>"+item.name+"</option>";
                         });
                         dom_banji.html(html);
                         form.render("select");
                     });
-
+                    //初始化学院的下拉列表
                     $.get("/user/listallxueyuan", function (res) {
                         var xueyuan = res;
                         var dom_xueyuan = $("#xueyuan");
                         var html = "<option value=''>选择学院</option>";
                         $.each(xueyuan,function (index,item) {
-                            html+="<option value=''>"+item.name+"</option>";
+                            html+="<option value='"+item.id+"'>"+item.name+"</option>";
                         });
                         dom_xueyuan.html(html);
                         form.render("select");
@@ -333,6 +324,29 @@
                     //装载新的数据
                     form.val("dataFrm", data);
                     url = "/user/updateUser";
+
+                    //初始化班级的下拉列表
+                    $.get("/user/listallbanji", function (res) {
+                        var banji = res;
+                        var dom_banji = $("#banji");
+                        var html = "<option value=''>选择班级</option>";
+                        $.each(banji,function (index,item) {
+                            html+="<option value='"+item.id+"'>"+item.name+"</option>";
+                        });
+                        dom_banji.html(html);
+                        form.render("select");
+                    });
+                    //初始化学院的下拉列表
+                    $.get("/user/listallxueyuan", function (res) {
+                        var xueyuan = res;
+                        var dom_xueyuan = $("#xueyuan");
+                        var html = "<option value=''>选择学院</option>";
+                        $.each(xueyuan,function (index,item) {
+                            html+="<option value='"+item.id+"'>"+item.name+"</option>";
+                        });
+                        dom_xueyuan.html(html);
+                        form.render("select");
+                    });
                 }
             });
         }

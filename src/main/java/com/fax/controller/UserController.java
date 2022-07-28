@@ -52,22 +52,26 @@ public class UserController {
         IPage<User> page = new Page<>(userVo.getSize(),userVo.getLimit());
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(StringUtils.isNotBlank(userVo.getUsername()),"username",userVo.getUsername());
-        queryWrapper.like(StringUtils.isNotBlank(userVo.getPhone()),"phone",userVo.getPhone());
+        //queryWrapper.like(StringUtils.isNotBlank(userVo.getPhone()),"phone",userVo.getPhone());
         IPage<User> iPage = userService.page(page, queryWrapper);
 
         //补充：进行连表查询得到学院名和班级名
         //思路：搭建学院与班级的mybatis-plus框架，使用usre表中的对应学院id与班级id，到对应的mybatis-plus中进行查询，
         //将查询得到的结果放置到前端
         for (User user : iPage.getRecords()) {
-            BanJi banJi = banJiService.getById(user.getId());
+            BanJi banJi = banJiService.getById(user.getBanjiId());
             user.setBanjiName(banJi.getName());
-            XueYuan xueYuan = xueYuanService.getById(user.getId());
+            XueYuan xueYuan = xueYuanService.getById(user.getXueyuanId());
             user.setXueyuanName(xueYuan.getName());
         }
         DataView dataView = new DataView(iPage.getTotal(), iPage.getRecords());
         return dataView;
     }
 
+    /**
+     * 查询班级下拉列表的数据并返回
+     * @return
+     */
     @RequestMapping("/user/listallbanji")
     @ResponseBody
     public List<BanJi> listAllBanji(){
@@ -75,6 +79,10 @@ public class UserController {
         return list;
     }
 
+    /**
+     * 查询学院下拉列表的数据并返回
+     * @return
+     */
     @RequestMapping("/user/listallxueyuan")
     @ResponseBody
     public List<XueYuan> listAllXueYuan(){
@@ -82,12 +90,24 @@ public class UserController {
         return list;
     }
 
+    //新增数据
     @RequestMapping("/user/addUser")
+    @ResponseBody
     public DataView addUser(User user){
         boolean save = userService.save(user);
         DataView dataView = new DataView();
         dataView.setCode(200);
         dataView.setMsg("数据新增成功！");
+        return dataView;
+    }
+
+    @RequestMapping("/user/updateUser")
+    @ResponseBody
+    public DataView updateUser(User user){
+        boolean b = userService.updateById(user);
+        DataView dataView = new DataView();
+        dataView.setMsg("数据更新成功！");
+        dataView.setCode(200);
         return dataView;
     }
 
