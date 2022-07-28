@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fax.entity.Menu;
+import com.fax.entity.User;
 import com.fax.service.MenuService;
+import com.fax.service.RoleService;
 import com.fax.util.TreeNode;
 import com.fax.util.TreeNodeBuilder;
 import com.fax.vo.DataView;
@@ -15,16 +17,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 @Controller
 public class MenuController {
 
      @Autowired
      private MenuService menuService;
+     @Autowired
+     private RoleService roleService;
     /**
      * 跳转到menu界面
      * @return
@@ -161,13 +163,30 @@ public class MenuController {
     /**
      * 建立菜单menu的层级关系
      * @return
+     * //为不同用户展现不同登录界面，通过控制该层级方法即可
+     * //主要思路，根据用户id查询角色id，根据角色id查询菜单,最后遍历菜单即可
+     *   //获取用户ID
+     *   //根据用户ID获取角色ID
+     *   //遍历角色ID，并获取对应的菜单，放到集合中
+     *   //对集合进行遍历
      */
     @RequestMapping("/menu/loadIndexLeftMenuJson")
     @ResponseBody
-    public DataView tomenu(Menu menu){
+    public DataView tomenu(Menu menu, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        Integer userId = user.getId();
+        List<Integer> rolelist = roleService.queryCurrentMaps(userId);
+        Set<Integer> set = new HashSet<>();
+        for (Integer role : rolelist) {
+            List<Integer> menulist = roleService.queryMidByRid(role);
+            set.addAll(menulist);
+        }
+        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("id",set);
+
         //从数据库获取树结点信息
         //遍历得到的结点信息并放入TreeNode中
-        List<Menu> list = menuService.list();
+        List<Menu> list = menuService.list(queryWrapper);
         ArrayList<TreeNode> treenode = new ArrayList<>();
         for (Menu menu1 : list) {
             Integer id = menu1.getId();
