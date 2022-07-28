@@ -20,6 +20,14 @@ public interface RoleMapper extends BaseMapper<Role> {
     void saveByRid(Integer rid, Integer mid);
 
     //根据id查询当前用户所拥有的角色
-    @Select("select * from user_role where uid = #{id}")
+    @Select("select rid from user_role where uid = #{id}")
     List<Integer> queryCurrentMaps(Integer id);
+
+    //根据用户id删除user_role表中的数据
+    @Delete("delete from user_role where uid = #{id}")
+    void deleteByUid(Integer id);
+
+    //将uid,rid插入user_role表中
+    @Insert("insert into user_role(uid,rid) values (#{uid},#{rid})")
+    void saveByUid(Integer uid, Integer rid);
 }

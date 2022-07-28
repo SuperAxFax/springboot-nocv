@@ -34,5 +34,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return roleMapper.queryCurrentMaps(id);
     }
 
+    @Override
+    public void deleteByUid(Integer id) {
+        roleMapper.deleteByUid(id);
+    }
+
+    @Override
+    public void saveByUid(Integer uid, Integer rid) {
+        roleMapper.saveByUid(uid,rid);
+    }
+
 
 }

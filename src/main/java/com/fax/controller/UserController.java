@@ -16,6 +16,7 @@ import com.sun.javafx.collections.MappingChange;
 import com.sun.org.glassfish.gmbal.ParameterNames;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.xpath.operations.Bool;
+import org.omg.CORBA.DATA_CONVERSION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -177,18 +178,41 @@ public class UserController {
         List<Integer> currentrole =  roleService.queryCurrentMaps(id);
         //3：将当前用户角色与角色数据进行比对，并设置标志位
         for (Map<String, Object> map : maps) {
-            Boolean check = false;
+            Boolean LAY_CHECKED = false;
             Integer dataid = (Integer) map.get("id");
             for (Integer integer : currentrole) {
                 if (dataid.equals(integer)){
-                    check = true;
+                    LAY_CHECKED = true;
                     break;
                 }
             }
-            map.put("check",check);
+            map.put("LAY_CHECKED",LAY_CHECKED);
         }
         //4：返回比对完之后的数据
         return new DataView(Long.valueOf(maps.size()),maps);
+    }
+
+
+    /**
+     * 将用户角色保存到数据库
+     * @param uid
+     * @param ids
+     * @return
+     */
+    @RequestMapping("/user/saveUserRole")
+    @ResponseBody
+    public DataView saveUserRole(Integer uid, Integer[] ids){
+        //先删除再保存
+        roleService.deleteByUid(uid);
+        if (ids != null ){
+            for (Integer rid : ids) {
+                roleService.saveByUid(uid,rid);
+            }
+        }
+        DataView dataView = new DataView();
+        dataView.setCode(200);
+        dataView.setMsg("用户角色保存成功！");
+        return dataView;
     }
 
 }
