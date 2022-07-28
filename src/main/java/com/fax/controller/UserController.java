@@ -3,7 +3,6 @@ package com.fax.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.additional.query.impl.QueryChainWrapper;
 import com.fax.entity.BanJi;
 import com.fax.entity.User;
 import com.fax.entity.XueYuan;
@@ -66,6 +65,29 @@ public class UserController {
             user.setXueyuanName(xueYuan.getName());
         }
         DataView dataView = new DataView(iPage.getTotal(), iPage.getRecords());
+        return dataView;
+    }
+
+    @RequestMapping("/user/listallbanji")
+    @ResponseBody
+    public List<BanJi> listAllBanji(){
+        List<BanJi> list = banJiService.list();
+        return list;
+    }
+
+    @RequestMapping("/user/listallxueyuan")
+    @ResponseBody
+    public List<XueYuan> listAllXueYuan(){
+        List<XueYuan> list = xueYuanService.list();
+        return list;
+    }
+
+    @RequestMapping("/user/addUser")
+    public DataView addUser(User user){
+        boolean save = userService.save(user);
+        DataView dataView = new DataView();
+        dataView.setCode(200);
+        dataView.setMsg("数据新增成功！");
         return dataView;
     }
 

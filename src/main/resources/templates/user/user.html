@@ -93,28 +93,24 @@
 <!--添加和修改弹出层-->
 <div id="addOrUpdateDiv" style="display: none;padding: 10px;padding-right: 5%">
     <form action="" method="post" class="layui-form" id="dataFrm" lay-filter="dataFrm">
-        <div class="layui-form-item">
-            <div class="layui-inline">
+            <div class="layui-form-item">
                 <label class="layui-form-label">所属学院</label>
                 <div class="layui-input-block">
-                    <input type="hidden" name="xue_yuan_id" id="deptid">
+                    <select name="xueYuanId" id="xueyuan" lay-filter="aihao">
+                        <option value=""></option>
+                        <option value="0">写作</option>
+                    </select>
                 </div>
             </div>
-            <div class="layui-inline">
+            <div class="layui-form-item">
                 <label class="layui-form-label">所属班级</label>
                 <div class="layui-input-block">
-                    <input type="hidden" name="ban_ji_id" id="deptidd">
+                    <select name="banJiId" id="banji" lay-filter="aihao">
+                        <option value=""></option>
+                        <option value="0">写作</option>
+                    </select>
                 </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">任课老师</label>
-                <div class="layui-input-block">
-                    <ul id="leaderdeptTree" class="dtree" data-id="0"></ul>
-                </div>
-            </div>
-        </div>
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">用户名称</label>
@@ -298,11 +294,28 @@
                     $("#dataFrm")[0].reset();
 
                     url = "/user/addUser";
-                    //初始化排序码
-                    $.get("/user/loadUserMaxOrderNum", function (res) {
-                        $("#ordernum").val(res.value);
+                    //初始化下拉列表
+                    $.get("/user/listallbanji", function (res) {
+                        var banji = res;
+                        var dom_banji = $("#banji");
+                        var html = "<option value=''>选择班级</option>";
+                        $.each(banji,function (index,item) {
+                            html+="<option value=''>"+item.name+"</option>";
+                        });
+                        dom_banji.html(html);
+                        form.render("select");
                     });
-                    form.render("select");
+
+                    $.get("/user/listallxueyuan", function (res) {
+                        var xueyuan = res;
+                        var dom_xueyuan = $("#xueyuan");
+                        var html = "<option value=''>选择学院</option>";
+                        $.each(xueyuan,function (index,item) {
+                            html+="<option value=''>"+item.name+"</option>";
+                        });
+                        dom_xueyuan.html(html);
+                        form.render("select");
+                    });
                 }
             });
         }
