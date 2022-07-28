@@ -11,12 +11,16 @@ import com.fax.service.UserService;
 import com.fax.service.XueYuanService;
 import com.fax.vo.DataView;
 import com.fax.vo.UserVo;
+import com.sun.org.glassfish.gmbal.ParameterNames;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.jws.soap.SOAPBinding;
+import javax.xml.crypto.Data;
 import java.util.List;
 
 @Controller
@@ -101,6 +105,11 @@ public class UserController {
         return dataView;
     }
 
+    /**
+     * 更新用户数据
+     * @param user
+     * @return
+     */
     @RequestMapping("/user/updateUser")
     @ResponseBody
     public DataView updateUser(User user){
@@ -111,5 +120,38 @@ public class UserController {
         return dataView;
     }
 
+    /**
+     * 删除用户数据
+     * @param id
+     * @return
+     */
+    @RequestMapping("user/deleteUser/{id}")
+    @ResponseBody
+    public DataView deleteUser(@PathVariable("id") Integer id){
+        boolean remove = userService.removeById(id);
+        DataView dataView = new DataView();
+        dataView.setCode(200);
+        dataView.setMsg("删除用户成功！");
+        return dataView;
+    }
+
+    /**
+     * 重置密码
+     * @param id
+     * @param
+     * @return
+     */
+    @RequestMapping("/user/resetPwd/{id}")
+    @ResponseBody
+    public DataView updatePassword(@PathVariable("id") Integer id){
+        User user = new User();//使用User user = userService.getById(id);  user.setPassword("123456");没有成功的原因是，这样写不会调用mybatis-plus中的sql语句对数据库进行更新。
+        user.setId(id);
+        user.setPassword("123456");
+        userService.updateById(user);
+        DataView dataView = new DataView();
+        dataView.setMsg("密码修改成功！");
+        dataView.setCode(200);
+        return dataView;
+    }
 
 }
