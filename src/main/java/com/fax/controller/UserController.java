@@ -7,12 +7,15 @@ import com.fax.entity.BanJi;
 import com.fax.entity.User;
 import com.fax.entity.XueYuan;
 import com.fax.service.BanJiService;
+import com.fax.service.RoleService;
 import com.fax.service.UserService;
 import com.fax.service.XueYuanService;
 import com.fax.vo.DataView;
 import com.fax.vo.UserVo;
+import com.sun.javafx.collections.MappingChange;
 import com.sun.org.glassfish.gmbal.ParameterNames;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xpath.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.jws.soap.SOAPBinding;
 import javax.xml.crypto.Data;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -31,6 +37,9 @@ public class UserController {
     private BanJiService banJiService;
     @Autowired
     private XueYuanService xueYuanService;
+    @Autowired
+    private RoleService roleService;
+
     @RequestMapping("/touser")
     public String toUser(){
         return "user/user";
@@ -152,6 +161,34 @@ public class UserController {
         dataView.setMsg("密码修改成功！");
         dataView.setCode(200);
         return dataView;
+    }
+
+    /**
+     * 初始化用戶角色分配
+     * @param id
+     * @return
+     */
+    @RequestMapping("/user/initRoleByUserId")
+    @ResponseBody
+    public DataView initRoleData(Integer id){
+        //1：查询出数据库中所有的角色数据
+        List<Map<String, Object>> maps = roleService.listMaps();
+        //2：查询当前用户所拥有的角色
+        List<Integer> currentrole =  roleService.queryCurrentMaps(id);
+        //3：将当前用户角色与角色数据进行比对，并设置标志位
+        for (Map<String, Object> map : maps) {
+            Boolean check = false;
+            Integer dataid = (Integer) map.get("id");
+            for (Integer integer : currentrole) {
+                if (dataid.equals(integer)){
+                    check = true;
+                    break;
+                }
+            }
+            map.put("check",check);
+        }
+        //4：返回比对完之后的数据
+        return new DataView(Long.valueOf(maps.size()),maps);
     }
 
 }

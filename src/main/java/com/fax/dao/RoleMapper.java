@@ -18,4 +18,8 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     @Insert("insert into role_menu(rid,mid) values (#{rid},#{mid})")
     void saveByRid(Integer rid, Integer mid);
+
+    //根据id查询当前用户所拥有的角色
+    @Select("select * from user_role where uid = #{id}")
+    List<Integer> queryCurrentMaps(Integer id);
 }

@@ -23,7 +23,6 @@ public class User {
     private String address;
     private String img;
 
-    private Integer roleId;
     private Integer xueyuanId;
     private Integer banjiId;
     private Integer teacherId;

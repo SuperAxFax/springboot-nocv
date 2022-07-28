@@ -14,4 +14,6 @@ public interface RoleService extends IService<Role> {
 
 
     void saveByRid(Integer rid, Integer mid);
+
+    List<Integer> queryCurrentMaps(Integer id);
 }

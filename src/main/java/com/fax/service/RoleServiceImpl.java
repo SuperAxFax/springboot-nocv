@@ -29,5 +29,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         roleMapper.saveByRid(rid,mid);
     }
 
+    @Override
+    public List<Integer> queryCurrentMaps(Integer id) {
+        return roleMapper.queryCurrentMaps(id);
+    }
+
 
 }
