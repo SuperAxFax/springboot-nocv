@@ -13,6 +13,7 @@ shiro:
     - /layui/**
     - /login/login
     - /login/getCode
+    - /
     - /login*
     - /layui_ext/**
     - /js/**
