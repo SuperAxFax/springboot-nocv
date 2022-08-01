@@ -53,10 +53,10 @@
         </button>
     </div>
 </div>
-
 <!--添加和修改弹出层-->
 <div id="addOrUpdateDiv" style="display: none;padding: 10px;padding-right: 5%">
     <form action="" method="post" class="layui-form" id="dataFrm" lay-filter="dataFrm">
+        <div class="layui-form">
         <div class="layui-form-item">
         <div class="layui-inline">
             <lable class="layui-form-label">标题名称</lable>
@@ -83,7 +83,7 @@
         </div>
         </div>
 
-        <!--<div class="layui-form">
+
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">创建时间</label>
@@ -92,7 +92,7 @@
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
 
         <div class="layui-form-item">
             <div class="layui-input-block" style="text-align: center;padding-right: 7%">
@@ -142,7 +142,9 @@
                 {field: 'title', title: '省份', width:150},
                 {field: 'content', title: '内容', width: 300},
                 {field: 'createby', title: '创建人', width: 150},
-               /* {field: 'createtime', title: '创建时间', width: 150},*/
+                {field: 'createtime', title: '创建时间', width: 150
+                    ,templet : "<div>{{layui.util.toDateString(d.createtime,'yyyy-MM-dd HH:mm:ss')}}</div>"
+                },
                 {fixed: 'right', title: '操作', toolbar: '#roleRowBar', align: 'center',width:280}
             ] ],
             done:function (data, curr, count) {

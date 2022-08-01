@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -19,5 +20,6 @@ public class News {
     private String title;
     private String content;
     private String createby;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 }
