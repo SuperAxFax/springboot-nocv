@@ -1,5 +1,6 @@
 package com.fax.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fax.entity.NocvData;
 import com.fax.entity.NocvGlobal;
 import com.fax.entity.NocvLine;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -37,6 +39,38 @@ public class IndexController {
     @RequestMapping("/query")
     @ResponseBody//作用是将List序列化成为一个json实体
     public List<NocvData> queryDta(){
+        //将中国疫情图中的数据加入redis缓存
+        //具体执行步骤：
+        //1：首先查询出34个省份的数据并将其封装成JSONObjectString的形式
+
+        //2：遍历得到的数据并转换成前端可以识别的格式
+        Jedis jedis = new Jedis("127.0.0.1");
+        if (jedis != null){
+            List<String> nocvdata = jedis.lrange("nocvdata", 0, 33);
+            if (nocvdata.size() > 0){
+                List<NocvData> list = new ArrayList<>();
+                for (int i = 0; i < nocvdata.size(); i++) {
+                    String s = nocvdata.get(i);
+                    JSONObject object = JSONObject.parseObject(s);
+                    Object name = object.get("name");
+                    Object value = object.get("value");
+                    NocvData nocvData = new NocvData();
+                    nocvData.setName((String) name);
+                    nocvData.setValue((Integer) value);
+                    list.add(nocvData);
+                }
+                return list;
+            }else {
+                List<NocvData> list = indexService.querylimit34();
+                for (NocvData nocvData : list) {
+                    String s = JSONObject.toJSONString(nocvData);
+                    jedis.lpush("nocvdata",s);
+                }
+                return list;
+            }
+
+        }
+        //保险步骤：如果上述都失效了，执行这部分，但上面基本不会失效！
         List<NocvData> list = indexService.querylimit34();
         return list;
     }

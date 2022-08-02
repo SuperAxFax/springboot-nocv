@@ -26,7 +26,7 @@ public class HttpTest {
     @Autowired
     private IndexService indexService;
 
-    @Scheduled(fixedDelay = 100000)
+    /*@Scheduled(fixedDelay = 100000)*/
     public void apitest() throws Exception {
 
         HttpUtil httpUtil = new HttpUtil();
@@ -79,11 +79,7 @@ public class HttpTest {
         boolean save = apiService.save(nocvApiData);
         System.out.println(save);
 
-        //清除缓存中数据
-        Jedis jedis = new Jedis("127.0.0.1");
-        if (jedis != null){
-            jedis.flushDB();
-        }
+
 
         //3：获取从api接口中得到的省份疫K情json数据
         //1：获取中国疫情json数据
@@ -119,6 +115,12 @@ public class HttpTest {
         //3：执行插入操作
         boolean b = indexService.saveBatch(prolist);
         System.out.println(b);
+
+        //清除缓存中数据(根据需要进行删除)
+        Jedis jedis = new Jedis("127.0.0.1");
+        if (jedis != null){
+            jedis.flushDB();
+        }
 
     }
 }
