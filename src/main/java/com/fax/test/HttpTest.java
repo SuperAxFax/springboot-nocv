@@ -11,6 +11,7 @@ import com.fax.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
 
 import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
@@ -25,7 +26,7 @@ public class HttpTest {
     @Autowired
     private IndexService indexService;
 
-    /*@Scheduled(fixedDelay = 100000)*/
+    @Scheduled(fixedDelay = 100000)
     public void apitest() throws Exception {
 
         HttpUtil httpUtil = new HttpUtil();
@@ -78,7 +79,13 @@ public class HttpTest {
         boolean save = apiService.save(nocvApiData);
         System.out.println(save);
 
-    //3：获取从api接口中得到的省份疫K情json数据
+        //清除缓存中数据
+        Jedis jedis = new Jedis("127.0.0.1");
+        if (jedis != null){
+            jedis.flushDB();
+        }
+
+        //3：获取从api接口中得到的省份疫K情json数据
         //1：获取中国疫情json数据
         JSONArray areaTree = chinaTotal.getJSONArray("areaTree");
         Object[] areaTree1 = areaTree.toArray();

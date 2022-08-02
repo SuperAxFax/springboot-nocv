@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.xml.crypto.Data;
 import java.util.Date;
@@ -23,5 +24,6 @@ public class NocvApiData {
     private Integer dead;
     private Integer suspect;
     //这个错误就tm离谱，日期的数据类型是Date，而不是Data
+   /* @DateTimeFormat(pattern = "yyyy-MM--dd HH:mm:ss")*/
     private Date datatime;
 }

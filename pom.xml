@@ -98,6 +98,12 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+        <!--引入jedis客户端-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+
         <!--&lt;!&ndash;mybatis-plus联表查询&ndash;&gt;
         <dependency>
             <groupId>com.github.yulichang</groupId>
